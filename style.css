@@ -263,7 +263,7 @@ header h1 {
   padding: 4px 8px;
 }
 
-.hidden { display: none !important; }
+
 .count {
   background: var(--accent);
   color: white;
