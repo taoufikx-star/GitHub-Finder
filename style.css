@@ -1,0 +1,274 @@
+:root {
+  --bg: #0d1117;
+  --bg-card: #161b22;
+  --text: #c9d1d9;
+  --text-secondary: #8b949e;
+  --accent: #58a6ff;
+  --danger: #f85149;
+  --success: #3fb950;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  background-color: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+}
+
+.app {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+header h1 {
+  font-size: 2.5rem;
+  color: var(--accent);
+}
+
+.tabs {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 1.5rem;
+  border-bottom: 1px solid #30363d;
+}
+
+.tab {
+  padding: 12px 24px;
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.tab.active {
+  color: var(--text);
+  border-bottom: 3px solid var(--accent);
+  font-weight: 600;
+}
+
+.search-bar {
+  display: flex;
+  gap: 10px;
+  max-width: 600px;
+  margin: 0 auto 2rem;
+}
+
+#username-input {
+  flex: 1;
+  padding: 14px 16px;
+  border-radius: 8px;
+  border: 1px solid #30363d;
+  background-color: var(--bg-card);
+  color: var(--text);
+  font-size: 1.1rem;
+}
+
+#username-input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.2);
+}
+
+#search-btn {
+  padding: 0 28px;
+  background-color: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+#search-btn:hover {
+  background-color: #1f6feb;
+}
+
+/* États */
+.welcome, #loading, #error, #profile {
+  text-align: center;
+  padding: 3rem 1rem;
+}
+
+.loader {
+  width: 50px;
+  height: 50px;
+  border: 5px solid #30363d;
+  border-top: 5px solid var(--accent);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Profile Card */
+.profile-card {
+  max-width: 700px;
+  margin: 0 auto;
+  background-color: var(--bg-card);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+}
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 2rem;
+  background: linear-gradient(135deg, #161b22, #21262d);
+}
+
+.profile-header img {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: 4px solid var(--accent);
+}
+
+.profile-info h2 {
+  font-size: 1.8rem;
+}
+
+.profile-info .login {
+  color: var(--accent);
+  font-size: 1.3rem;
+}
+
+.bio {
+  padding: 1.5rem 2rem;
+  font-style: italic;
+  color: var(--text-secondary);
+  border-bottom: 1px solid #30363d;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  padding: 1.5rem 2rem;
+  gap: 1rem;
+  background-color: var(--bg-card);
+}
+
+.stat {
+  text-align: center;
+}
+
+.stat-value {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.stat-label {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.profile-actions {
+  padding: 1.5rem 2rem;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.btn {
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  border: none;
+}
+
+.btn-primary {
+  background-color: var(--accent);
+  color: white;
+}
+
+.btn-primary:hover { background-color: #1f6feb; }
+
+.btn-outline {
+  background: transparent;
+  border: 2px solid var(--accent);
+  color: var(--accent);
+}
+
+.btn-outline:hover {
+  background-color: var(--accent);
+  color: white;
+}
+
+.btn-danger {
+  background-color: var(--danger);
+  color: white;
+}
+
+.bookmarks-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.bookmark-card {
+  background-color: var(--bg-card);
+  border-radius: 10px;
+  padding: 1rem;
+  display: flex;
+  gap: 15px;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.bookmark-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+}
+
+.bookmark-card img {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+}
+
+.bookmark-info h4 {
+  margin-bottom: 4px;
+}
+
+.remove-btn {
+  margin-left: auto;
+  background: transparent;
+  color: var(--danger);
+  border: none;
+  font-size: 1.4rem;
+  cursor: pointer;
+  padding: 4px 8px;
+}
+
+.hidden { display: none !important; }
+.count {
+  background: var(--accent);
+  color: white;
+  font-size: 0.8rem;
+  padding: 2px 8px;
+  border-radius: 20px;
+  margin-left: 6px;
+}
