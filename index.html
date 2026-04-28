@@ -1,68 +1,82 @@
-xouf daba : <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fr">
-
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>GitHunt - Recherche GitHub</title>
-    <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GitHub Recruiter - Recherche de Talents</title>
+  <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-    <div class="app">
-        <!-- Header -->
-        <header>
-            <h1>GitHunt</h1>
-            <p>Recherche de talents développeurs</p>
+  <div class="container">
+    <!-- Header -->
+    <header>
+      <h1>🔍 GitHub Recruiter</h1>
+      <div class="tabs">
+        <button id="tab-search" class="tab active">Rechercher</button>
+        <button id="tab-bookmarks" class="tab">
+          Favoris <span id="bookmark-count" class="badge">0</span>
+        </button>
+      </div>
+    </header>
 
-            <div class="tabs">
-                <button id="tab-search" class="tab active">Rechercher</button>
-                <button id="tab-bookmarks" class="tab">
-                    Favoris <span id="bookmark-count" class="count">0</span>
-                </button>
-            </div>
-        </header>
+    <!-- Section Recherche -->
+    <section id="search-section">
+      <div class="search-bar">
+        <input type="text" id="username-input" placeholder="Nom d'utilisateur GitHub (ex: octocat)" autocomplete="off">
+        <button id="search-btn">Rechercher</button>
+      </div>
 
-        <!-- Section Recherche -->
-        <section id="search-section" class="section active">
-            <div class="search-bar">
-                <input type="text" id="username-input" placeholder="Nom d'utilisateur GitHub (ex: octocat)"
-                    autocomplete="off" />
-                <button id="search-btn">Rechercher</button>
-            </div>
+      <div id="status" class="status"></div>
 
-            <div id="welcome" class="welcome">
-                <div class="illustration">🔍</div>
-                <h2>Recherchez un développeur GitHub</h2>
-                <p>Entrez un nom d'utilisateur pour voir son profil et ses statistiques.</p>
-            </div>
+      <!-- Zone de résultats -->
+      <div id="result" class="profile-card hidden">
+        <div class="profile-header">
+          <img id="avatar" src="" alt="Avatar" class="avatar">
+          <div>
+            <h2 id="name"></h2>
+            <p id="login" class="login"></p>
+            <a id="github-link" href="#" target="_blank" class="github-link">Voir sur GitHub →</a>
+          </div>
+        </div>
 
-            <!-- États dynamiques -->
-            <div id="loading" class="hidden">
-                <div class="loader"></div>
-                <p>Chargement du profil...</p>
-            </div>
+        <p id="bio" class="bio"></p>
 
-            <div id="error" class="hidden">
-                <div class="error-icon">⚠️</div>
-                <h3 id="error-title"></h3>
-                <p id="error-message"></p>
-                <button id="retry-btn">Réessayer</button>
-            </div>
+        <div class="stats">
+          <div class="stat">
+            <span class="stat-number" id="followers">0</span>
+            <span class="stat-label">Followers</span>
+          </div>
+          <div class="stat">
+            <span class="stat-number" id="following">0</span>
+            <span class="stat-label">Following</span>
+          </div>
+          <div class="stat">
+            <span class="stat-number" id="public_repos">0</span>
+            <span class="stat-label">Repos</span>
+          </div>
+        </div>
 
-            <div id="profile" class="profile-card hidden">
-                <!-- Rempli dynamiquement par JS -->
-            </div>
-        </section>
+        <div class="actions">
+          <button id="bookmark-btn" class="btn btn-primary">⭐ Ajouter aux favoris</button>
+          <button id="remove-bookmark-btn" class="btn btn-danger hidden">🗑️ Retirer des favoris</button>
+        </div>
+      </div>
+    </section>
 
-        <!-- Section Favoris -->
-        <section id="bookmarks-section" class="section hidden">
-            <h2>Mes développeurs favoris <span id="total-bookmarks">0</span></h2>
-            <div id="bookmarks-list" class="bookmarks-grid">
-                <!-- Rempli dynamiquement -->
-            </div>
-        </section>
-        <script src="script.js"></script>
+    <!-- Section Favoris -->
+    <section id="bookmarks-section" class="hidden">
+      <h2>Mes favoris <span id="bookmarks-total"></span></h2>
+      <div id="bookmarks-list" class="bookmarks-grid"></div>
+      <p id="no-bookmarks" class="empty-message">Aucun favori pour le moment.</p>
+    </section>
+
+    <!-- Loader -->
+    <div id="loader" class="loader hidden">
+      <div class="spinner"></div>
+      <p>Chargement du profil...</p>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
 </body>
-
 </html>

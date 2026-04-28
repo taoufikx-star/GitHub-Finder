@@ -1,70 +1,64 @@
-// نجيبو العناصر من HTML
-const input = document.getElementById("username-input");
-const searchBtn = document.getElementById("search-btn");
-const profileDiv = document.getElementById("profile");
-const loading = document.getElementById("loading");
-const error = document.getElementById("error");
-const welcome = document.getElementById("welcome");
+const testUsers = [
+    {
+        id: 1,
+        login: "torvalds",
+        name: "Linus Torvalds",
+        avatar_url: "https://avatars.githubusercontent.com/u/1024588?v=4",
+        bio: "Linux creator",
+        followers: 200000,
+        following: 0,
+        public_repos: 50
+    },
+    {
+        id: 2,
+        login: "gvanrossum",
+        name: "Guido van Rossum",
+        avatar_url: "https://avatars.githubusercontent.com/u/6490553?v=4",
+        bio: "Python creator",
+        followers: 50000,
+        following: 50,
+        public_repos: 30
+    }
+];
 
-// ملي كنكليكو على زر البحث
-searchBtn.addEventListener("click", () => {
-    const username = input.value.toLowerCase();
+// Repositories de test
 
-    // نخبيو welcome
-    welcome.classList.add("hidden");
+const testRepos = [
+    {
+        name: "linux",
+        description: "Linux kernel",
+        language: "C",
+        stargazers_count: 15000,
+        forks_count: 2000,
+        html_url: "https://github.com/torvalds/linux"
+    },
+    {
+        name: "cpython",
+        description: "Python interpreter",
+        language: "C",
+        stargazers_count: 50000,
+        forks_count: 23000,
+        html_url: "https://github.com/python/cpython"
+    }
+];
 
-    // نوريو loading
-    loading.classList.remove("hidden");
-    error.classList.add("hidden");
-    profileDiv.classList.add("hidden");
+// État centralisé de l'application
 
-    // simulation ديال loading
-    setTimeout(() => {
+const state = {
+    currentUser: null,      // Utilisateur actuellement affiché
+    bookmarks: [],          // Favoris sauvegardés
+    isViewingBookmarks: false  // Affiche favoris ou résultats?
+};
 
-        // نقلبو على user
-        const user = testUsers.find(u => u.login === username);
+// Éléments principaux
 
-        loading.classList.add("hidden");
+const searchInput = document.getElementById('searchInput');
+const searchBtn = document.getElementById('searchBtn');
+const userProfile = document.getElementById('userProfile');
+const reposList = document.getElementById('reposList');
+const welcomeState = document.getElementById('welcomeState');
+const loadingState = document.getElementById('loadingState');
+const errorState = document.getElementById('errorState');
+const bookmarksList = document.getElementById('bookmarksList');
+const bookmarkCount = document.getElementById('bookmarkCount');
 
-        if (!user) {
-            // إلا ما لقايناهش
-            error.classList.remove("hidden");
-            document.getElementById("error-title").textContent = "Utilisateur non trouvé";
-            document.getElementById("error-message").textContent = "Ce profil n'existe pas.";
-            return;
-        }
-
-        // إلا لقيناه
-        showProfile(user);
-
-    }, 1000);
-});
-
-// function باش نعرضو profile
-function showProfile(user) {
-    profileDiv.classList.remove("hidden");
-
-    profileDiv.innerHTML = `
-        <img src="${user.avatar_url}" width="100">
-        <h2>${user.name}</h2>
-        <p>@${user.login}</p>
-        <p>${user.bio}</p>
-
-        <div>
-            <span>Followers: ${user.followers}</span>
-            <span>Following: ${user.following}</span>
-            <span>Repos: ${user.public_repos}</span>
-        </div>
-
-        <h3>Repositories:</h3>
-        <ul>
-            ${testRepos.map(repo => `
-                <li>
-                    <a href="${repo.html_url}" target="_blank">
-                        ${repo.name}
-                    </a>
-                </li>
-            `).join("")}
-        </ul>
-    `;
-}
