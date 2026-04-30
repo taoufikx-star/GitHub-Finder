@@ -63,7 +63,7 @@ h1 {
 
 .tab.active {
   background: var(--primary);
-  color: rgb(125, 2, 2);
+  color: white;
 }
 
 .search-bar {
@@ -237,7 +237,7 @@ h1 {
   color: #721c24;
 }
 
-.hidden {  !important; }
+.hidden { display: none !important; }
 
 .badge {
   background: #dc3545;
