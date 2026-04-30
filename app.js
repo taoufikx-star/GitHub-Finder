@@ -61,7 +61,7 @@ const bookmarksList = document.getElementById('bookmarksList');
 const bookmarkCount = document.getElementById('bookmarkCount');
 
 function displayUserProfil (user){
-  const avatars = document.getElementById("avatar");
+  const avatar = document.getElementById("avatar");
   const nameEL = document.getElementById("name");
   const loginEL = document.getElementById("login");
   const bioEl = document.getElementById("bio");
@@ -70,5 +70,5 @@ function displayUserProfil (user){
   const reposEL = document.getElementById("public_repos");
   const githubLink = document.getElementById("github-link");
   const resultCard = document.getElementById("result");
-  
+  if(ava)
 }
