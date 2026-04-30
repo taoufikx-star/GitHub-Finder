@@ -60,15 +60,44 @@ const errorState = document.getElementById('errorState');
 const bookmarksList = document.getElementById('bookmarksList');
 const bookmarkCount = document.getElementById('bookmarkCount');
 
-function displayUserProfil (user){
-  const avatar = document.getElementById("avatar");
-  const nameEL = document.getElementById("name");
-  const loginEL = document.getElementById("login");
-  const bioEl = document.getElementById("bio");
-  const followersEl = document.getElementById("followers");
-  const followingEL = document.getElementById("following");
-  const reposEL = document.getElementById("public_repos");
-  const githubLink = document.getElementById("github-link");
-  const resultCard = document.getElementById("result");
-  if(ava)
-}
+if (avatar) avatar.src = user.avatar_url || '';
+
+    if (nameEl) nameEl.textContent = user.name || user.login;
+
+    if (loginEl) loginEl.textContent = `@${user.login}`;
+
+    if (bioEl) {
+        bioEl.textContent = user.bio || "Aucune biographie disponible.";
+    }
+
+    if (followersEl) {
+        followersEl.textContent = Number(user.followers).toLocaleString('fr-FR');
+    }
+
+    if (followingEl) {
+        followingEl.textContent = Number(user.following).toLocaleString('fr-FR');
+    }
+
+    if (reposEl) {
+        reposEl.textContent = Number(user.public_repos).toLocaleString('fr-FR');
+    }
+
+    if (githubLink) {
+        githubLink.href = `https://github.com/${user.login}`;
+    }
+    state.currentUser = user;
+    state.isViewingBookmarks = false;
+
+    if (resultCard){
+      resultCard.classList.remove ("hidden");
+    }
+    const bookmarksSection = document.getElementById ("bookmarks-section");
+    if (bookmarksSection) bookmarksSection.classList.add ("hidden");
+    const loader = document.getElementById("loader");
+    if (loader) loader.classList.add("hidden");
+
+    const bookmarkBtn = document.getElementById ("bookmark-btn");
+    const removeBtn = document.getElementById("remove-bookmark-btn");
+    if(bookmarkBtn) bookmarkBtn.classList.remove("hidden");
+    if(removeBtn) removeBtn.classList.add("hidden");
+  }
