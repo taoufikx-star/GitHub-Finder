@@ -1,3 +1,5 @@
+// Données de test - profils GitHub
+
 const testUsers = [
     {
         id: 1,
@@ -41,3 +43,11 @@ const testRepos = [
         html_url: "https://github.com/python/cpython"
     }
 ];
+
+// État centralisé de l'application
+
+const state = {
+    currentUser: null,      // Utilisateur actuellement affiché
+    bookmarks: [],          // Favoris sauvegardés
+    isViewingBookmarks: false  // Affiche favoris ou résultats?
+};
