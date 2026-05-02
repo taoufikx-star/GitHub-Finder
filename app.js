@@ -52,15 +52,20 @@ const state = {
     isViewingBookmarks: false  // Affiche favoris ou résultats?
 };
 
-const input = document.getElementById("search-input");
-const btn = document.getElementById("btn-search");
+// ==================== ÉLÉMENTS DOM ====================
 
-const profileCard = document.querySelector(".profile-card");
-
-const viewWelcome = document.getElementById("view-welcome");
-const viewLoading = document.getElementById("view-loading");
-const viewError = document.getElementById("view-error");
-const viewResults = document.getElementById("view-results");
-
-const errorMsg = document.getElementById("error-message");
+const searchInput    = document.getElementById('search-input')
+const searchBtn      = document.getElementById('btn-search')
+const btnBookmarks   = document.getElementById('btn-show-bookmarks')
+const headerBadge    = document.getElementById('header-badge')
+const viewWelcome    = document.getElementById('view-welcome')
+const viewLoading    = document.getElementById('view-loading')
+const viewError      = document.getElementById('view-error')
+const viewResults    = document.getElementById('view-results')
+const viewBookmarks  = document.getElementById('view-bookmarks')
+const errorMessage   = document.getElementById('error-message')
+const profileCard    = document.getElementById('profile-card')
+const bookmarksList  = document.getElementById('bookmarks-list')
+const bookmarksCount = document.getElementById('bookmarks-count')
+const btnBack        = document.getElementById('btn-back')
 
