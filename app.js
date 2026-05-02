@@ -1,4 +1,4 @@
-// Données de test - profils GitHub
+// ==================== 1. DONNÉES DE TEST ====================
 
 const testUsers = [
     {
@@ -21,9 +21,7 @@ const testUsers = [
         following: 50,
         public_repos: 30
     }
-];
-
-// Repositories de test
+]
 
 const testRepos = [
     {
@@ -42,30 +40,58 @@ const testRepos = [
         forks_count: 23000,
         html_url: "https://github.com/python/cpython"
     }
-];
+]
 
-// État centralisé de l'application
+// ==================== 2. STATE ====================
 
 const state = {
-    currentUser: null,      // Utilisateur actuellement affiché
-    bookmarks: [],          // Favoris sauvegardés
-    isViewingBookmarks: false  // Affiche favoris ou résultats?
-};
+    currentUser: null,
+    bookmarks: [],
+    isViewingBookmarks: false
+}
 
-// Éléments principaux
+// ==================== 3. ÉLÉMENTS DOM ====================
 
 const searchInput    = document.getElementById('search-input')
 const searchBtn      = document.getElementById('btn-search')
 const userProfile    = document.getElementById('profile-card')
+const reposList      = document.getElementById('reposList')
 const welcomeState   = document.getElementById('view-welcome')
 const loadingState   = document.getElementById('view-loading')
 const errorState     = document.getElementById('view-error')
 const bookmarksList  = document.getElementById('bookmarks-list')
 const bookmarkCount  = document.getElementById('bookmarks-count')
 
-function displayUserProfile(user) {
+// ==================== 4. hideAll() ====================
 
-    // Mettre à jour les éléments du profil
+function hideAll() {
+    welcomeState.classList.remove('active')
+    loadingState.classList.remove('active')
+    errorState.classList.remove('active')
+    document.getElementById('view-results').classList.remove('active')
+}
+
+// ==================== 5. ÉTATS ====================
+
+function showLoading() {
+    hideAll()
+    loadingState.classList.add('active')
+}
+
+function showError(message) {
+    hideAll()
+    errorState.classList.add('active')
+    document.getElementById('error-message').textContent = message
+}
+
+function showWelcome() {
+    hideAll()
+    welcomeState.classList.add('active')
+}
+
+// ==================== 6. displayUserProfile() ====================
+
+function displayUserProfile(user) {
     userProfile.innerHTML =
         '<div class="profile-top">' +
             '<div class="avatar-wrap">' +
@@ -82,42 +108,24 @@ function displayUserProfile(user) {
             '</div>' +
         '</div>' +
         '<div class="stats-grid">' +
-            '<div class="stat-box">' +
-                '<div class="stat-value">' + user.public_repos + '</div>' +
-                '<div class="stat-label">Repos</div>' +
-            '</div>' +
-            '<div class="stat-box">' +
-                '<div class="stat-value">' + user.followers + '</div>' +
-                '<div class="stat-label">Followers</div>' +
-            '</div>' +
-            '<div class="stat-box">' +
-                '<div class="stat-value">' + user.following + '</div>' +
-                '<div class="stat-label">Following</div>' +
-            '</div>' +
+            '<div class="stat-box"><div class="stat-value">' + user.public_repos + '</div><div class="stat-label">Repos</div></div>' +
+            '<div class="stat-box"><div class="stat-value">' + user.followers + '</div><div class="stat-label">Followers</div></div>' +
+            '<div class="stat-box"><div class="stat-value">' + user.following + '</div><div class="stat-label">Following</div></div>' +
         '</div>'
 
-    // Afficher la carte profil
     userProfile.style.display = 'block'
-
-    // Masquer l'écran d'accueil
     welcomeState.classList.remove('active')
     loadingState.classList.remove('active')
     errorState.classList.remove('active')
     document.getElementById('view-results').classList.add('active')
-
-    // Sauvegarder dans state
     state.currentUser = user
 }
 
+// ==================== 7. displayRepositories() ====================
+
 function displayRepositories(repos) {
-
-    // Vider la liste
     reposList.innerHTML = ''
-
-    // Parcourir les repos et créer une carte pour chacun
     repos.forEach(function(repo) {
-
-        // Créer la carte HTML du repo
         const repoCard =
             '<div class="repo-card">' +
                 '<div class="repo-name">' + repo.name + '</div>' +
@@ -129,9 +137,13 @@ function displayRepositories(repos) {
                 '</div>' +
                 '<a href="' + repo.html_url + '" target="_blank">Voir le repo ↗</a>' +
             '</div>'
-
-        // Ajouter la carte dans la liste
         reposList.innerHTML += repoCard
-
     })
 }
+
+// ==================== 8. searchUserLocal() — PROCHAINE ÉTAPE ====================
+
+// ==================== 9. EVENT LISTENERS — PROCHAINE ÉTAPE ====================
+
+// ==================== 10. INITIALIZE ====================
+showWelcome()

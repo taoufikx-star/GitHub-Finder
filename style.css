@@ -444,3 +444,43 @@ main {
   .profile-top { flex-direction: column; align-items: center; text-align: center; }
   .profile-actions { justify-content: center; }
 }
+
+/* ─── Repo Card ─── */
+.repo-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem 1.25rem;
+  margin-bottom: 0.75rem;
+  transition: border-color 0.18s;
+}
+.repo-card:hover { border-color: var(--accent); }
+
+.repo-name {
+  font-family: var(--mono);
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 0.4rem;
+}
+.repo-desc {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin-bottom: 0.6rem;
+  line-height: 1.5;
+}
+.repo-stats {
+  display: flex;
+  gap: 1rem;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-bottom: 0.6rem;
+}
+.repo-card a {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--accent);
+  text-decoration: none;
+}
+.repo-card a:hover { text-decoration: underline; }
