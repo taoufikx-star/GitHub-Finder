@@ -51,3 +51,16 @@ const state = {
     bookmarks: [],          // Favoris sauvegardés
     isViewingBookmarks: false  // Affiche favoris ou résultats?
 };
+
+const input = document.getElementById("search-input");
+const btn = document.getElementById("btn-search");
+
+const profileCard = document.querySelector(".profile-card");
+
+const viewWelcome = document.getElementById("view-welcome");
+const viewLoading = document.getElementById("view-loading");
+const viewError = document.getElementById("view-error");
+const viewResults = document.getElementById("view-results");
+
+const errorMsg = document.getElementById("error-message");
+
