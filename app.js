@@ -63,3 +63,48 @@ const errorState     = document.getElementById('view-error')
 const bookmarksList  = document.getElementById('bookmarks-list')
 const bookmarkCount  = document.getElementById('bookmarks-count')
 
+function displayUserProfile(user) {
+
+    // Mettre à jour les éléments du profil
+    userProfile.innerHTML =
+        '<div class="profile-top">' +
+            '<div class="avatar-wrap">' +
+                '<div class="avatar-glow"></div>' +
+                '<img src="' + user.avatar_url + '" alt="avatar"/>' +
+            '</div>' +
+            '<div class="profile-info">' +
+                '<div class="profile-name">' + (user.name || user.login) + '</div>' +
+                '<div class="profile-login">@' + user.login + '</div>' +
+                (user.bio ? '<div class="profile-bio">' + user.bio + '</div>' : '') +
+                '<div class="profile-actions">' +
+                    '<a href="https://github.com/' + user.login + '" target="_blank" class="btn btn-ghost">↗ GitHub</a>' +
+                '</div>' +
+            '</div>' +
+        '</div>' +
+        '<div class="stats-grid">' +
+            '<div class="stat-box">' +
+                '<div class="stat-value">' + user.public_repos + '</div>' +
+                '<div class="stat-label">Repos</div>' +
+            '</div>' +
+            '<div class="stat-box">' +
+                '<div class="stat-value">' + user.followers + '</div>' +
+                '<div class="stat-label">Followers</div>' +
+            '</div>' +
+            '<div class="stat-box">' +
+                '<div class="stat-value">' + user.following + '</div>' +
+                '<div class="stat-label">Following</div>' +
+            '</div>' +
+        '</div>'
+
+    // Afficher la carte profil
+    userProfile.style.display = 'block'
+
+    // Masquer l'écran d'accueil
+    welcomeState.classList.remove('active')
+    loadingState.classList.remove('active')
+    errorState.classList.remove('active')
+    document.getElementById('view-results').classList.add('active')
+
+    // Sauvegarder dans state
+    state.currentUser = user
+}
