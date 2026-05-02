@@ -141,9 +141,51 @@ function displayRepositories(repos) {
     })
 }
 
-// ==================== 8. searchUserLocal() — PROCHAINE ÉTAPE ====================
+// ==================== 8. searchUserLocal()  ====================
 
-// ==================== 9. EVENT LISTENERS — PROCHAINE ÉTAPE ====================
+
+async function searchUserLocal(username) {
+
+    // 1. Valider l'input — trim() enlève les espaces
+    const input = username.trim().toLowerCase()
+
+    if (!input) {
+        showError('Veuillez entrer un pseudo GitHub !')
+        return
+    }
+
+    // 2. Afficher le loader
+    showLoading()
+
+    // 3. Simuler un délai réseau de 800ms
+    await new Promise(function(resolve) {
+        setTimeout(resolve, 800)
+    })
+
+    // 4. Chercher le user dans testUsers avec find()
+    const user = testUsers.find(function(u) {
+        return u.login === input
+    })
+
+    // 5. Chercher ses repos dans testRepos
+    const repos = testRepos.filter(function(r) {
+        return r.html_url.includes(input)
+    })
+
+    // 6. User trouvé ou pas ?
+    if (!user) {
+        showError('Utilisateur non trouvé !')
+        return
+    }
+
+    // 7. Afficher le profil + repos
+    displayUserProfile(user)
+    displayRepositories(repos)
+}
+
+// ==================== 9. EVENT LISTENERS —  ====================
+
+
 
 // ==================== 10. INITIALIZE ====================
 showWelcome()
