@@ -108,3 +108,30 @@ function displayUserProfile(user) {
     // Sauvegarder dans state
     state.currentUser = user
 }
+
+function displayRepositories(repos) {
+
+    // Vider la liste
+    reposList.innerHTML = ''
+
+    // Parcourir les repos et créer une carte pour chacun
+    repos.forEach(function(repo) {
+
+        // Créer la carte HTML du repo
+        const repoCard =
+            '<div class="repo-card">' +
+                '<div class="repo-name">' + repo.name + '</div>' +
+                '<div class="repo-desc">' + (repo.description || 'Pas de description') + '</div>' +
+                '<div class="repo-stats">' +
+                    '<span>⭐ ' + repo.stargazers_count + '</span>' +
+                    '<span>🍴 ' + repo.forks_count + '</span>' +
+                    '<span>💻 ' + (repo.language || 'N/A') + '</span>' +
+                '</div>' +
+                '<a href="' + repo.html_url + '" target="_blank">Voir le repo ↗</a>' +
+            '</div>'
+
+        // Ajouter la carte dans la liste
+        reposList.innerHTML += repoCard
+
+    })
+}
