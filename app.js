@@ -185,6 +185,17 @@ async function searchUserLocal(username) {
 
 // ==================== 9. EVENT LISTENERS —  ====================
 
+// Clic sur le bouton recherche
+searchBtn.addEventListener('click', () => {
+    searchUserLocal(searchInput.value)
+})
+
+// Entrée avec la touche Entrée
+searchInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+        searchUserLocal(searchInput.value)
+    }
+})
 
 
 // ==================== 10. INITIALIZE ====================
