@@ -52,20 +52,14 @@ const state = {
     isViewingBookmarks: false  // Affiche favoris ou résultats?
 };
 
-// ==================== ÉLÉMENTS DOM ====================
+// Éléments principaux
 
 const searchInput    = document.getElementById('search-input')
 const searchBtn      = document.getElementById('btn-search')
-const btnBookmarks   = document.getElementById('btn-show-bookmarks')
-const headerBadge    = document.getElementById('header-badge')
-const viewWelcome    = document.getElementById('view-welcome')
-const viewLoading    = document.getElementById('view-loading')
-const viewError      = document.getElementById('view-error')
-const viewResults    = document.getElementById('view-results')
-const viewBookmarks  = document.getElementById('view-bookmarks')
-const errorMessage   = document.getElementById('error-message')
-const profileCard    = document.getElementById('profile-card')
+const userProfile    = document.getElementById('profile-card')
+const welcomeState   = document.getElementById('view-welcome')
+const loadingState   = document.getElementById('view-loading')
+const errorState     = document.getElementById('view-error')
 const bookmarksList  = document.getElementById('bookmarks-list')
-const bookmarksCount = document.getElementById('bookmarks-count')
-const btnBack        = document.getElementById('btn-back')
+const bookmarkCount  = document.getElementById('bookmarks-count')
 
