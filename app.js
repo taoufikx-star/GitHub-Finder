@@ -195,8 +195,8 @@ searchInput.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') {
         searchUserLocal(searchInput.value)
     }
-})
+});
 
 
 // ==================== 10. INITIALIZE ====================
-showWelcome()
+showWelcome();
