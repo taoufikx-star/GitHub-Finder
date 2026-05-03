@@ -1,15 +1,15 @@
 /* ─── CSS Variables ─── */
 :root {
-  --bg:        #0a0c10;
+  --bg:        #000000;
   --surface:   #111318;
   --surface2:  #1a1d24;
   --border:    #252830;
-  --accent:    #00e5ff;
+  --accent:    #d3ffdd;
   --accent2:   #7c3aed;
   --text:      #e8eaf0;
   --text-muted:#6b7280;
-  --danger:    #f87171;
-  --success:   #34d399;
+  --danger:    #09ff16;
+  --success:   #ff8000;
   --radius:    12px;
   --mono:      'Space Mono', monospace;
   --sans:      'Syne', sans-serif;
@@ -118,11 +118,11 @@ header {
 }
 .btn-fav:hover { border-color: #f59e0b; color: #f59e0b; }
 
-/* ─── Main Layout ─── */
+/* ─── Main Layout — FIXED ─── */
 main {
   flex: 1;
-  display: grid;
-  grid-template-columns: 1fr;
+  display: flex;
+  flex-direction: column;
   max-width: 860px;
   width: 100%;
   margin: 0 auto;
@@ -135,11 +135,13 @@ main {
   display: flex;
   gap: 0.6rem;
   width: 100%;
+  align-items: center;
 }
 
 .search-input-wrap {
   flex: 1;
   position: relative;
+  min-width: 0;
 }
 
 .search-icon {
@@ -150,6 +152,7 @@ main {
   color: var(--text-muted);
   font-size: 0.9rem;
   pointer-events: none;
+  z-index: 1;
 }
 
 #search-input {
@@ -163,6 +166,7 @@ main {
   font-size: 0.9rem;
   outline: none;
   transition: border-color 0.2s, box-shadow 0.2s;
+  box-sizing: border-box;
 }
 #search-input::placeholder { color: var(--text-muted); }
 #search-input:focus {
@@ -207,14 +211,17 @@ main {
   font-family: var(--mono);
 }
 
-/* ─── Loader ─── */
+/* ─── Loader — FIXED ─── */
 #view-loading {
-  display: flex;
+  display: none;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   padding: 4rem 1rem;
   gap: 1.25rem;
+}
+#view-loading.active {
+  display: flex;
 }
 
 .loader {
@@ -432,19 +439,6 @@ main {
 }
 .empty-state .empty-icon { font-size: 2.5rem; margin-bottom: 0.75rem; display: block; }
 
-/* ─── Responsive ─── */
-@media (min-width: 600px) {
-  main { padding: 2.5rem 2rem 5rem; }
-}
-
-@media (max-width: 480px) {
-  header { padding: 1rem 1rem; }
-  .logo { font-size: 1rem; }
-  .stats-grid { grid-template-columns: repeat(2, 1fr); }
-  .profile-top { flex-direction: column; align-items: center; text-align: center; }
-  .profile-actions { justify-content: center; }
-}
-
 /* ─── Repo Card ─── */
 .repo-card {
   background: var(--surface);
@@ -484,3 +478,16 @@ main {
   text-decoration: none;
 }
 .repo-card a:hover { text-decoration: underline; }
+
+/* ─── Responsive ─── */
+@media (min-width: 600px) {
+  main { padding: 2.5rem 2rem 5rem; }
+}
+
+@media (max-width: 480px) {
+  header { padding: 1rem 1rem; }
+  .logo { font-size: 1rem; }
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .profile-top { flex-direction: column; align-items: center; text-align: center; }
+  .profile-actions { justify-content: center; }
+}
