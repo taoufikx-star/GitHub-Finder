@@ -1,19 +1,27 @@
 // ==================== 1. DONNÉES DE TEST ====================
 
 const testUsers = [
-    { id: 1, login: "torvalds", name: "Linus Torvalds",
-      avatar_url: "https://avatars.githubusercontent.com/u/1024588?v=4",
-      bio: "Linux creator", followers: 200000, following: 0, public_repos: 50 },
-    { id: 2, login: "gvanrossum", name: "Guido van Rossum",
-      avatar_url: "https://avatars.githubusercontent.com/u/6490553?v=4",
-      bio: "Python creator", followers: 50000, following: 50, public_repos: 30 }
+    {
+        id: 1, login: "torvalds", name: "Linus Torvalds",
+        avatar_url: "https://avatars.githubusercontent.com/u/1024588?v=4",
+        bio: "Linux creator", followers: 200000, following: 0, public_repos: 50
+    },
+    {
+        id: 2, login: "gvanrossum", name: "Guido van Rossum",
+        avatar_url: "https://avatars.githubusercontent.com/u/6490553?v=4",
+        bio: "Python creator", followers: 50000, following: 50, public_repos: 30
+    }
 ]
 
 const testRepos = [
-    { name: "linux", description: "Linux kernel", language: "C",
-      stargazers_count: 15000, forks_count: 2000, html_url: "https://github.com/torvalds/linux" },
-    { name: "cpython", description: "Python interpreter", language: "C",
-      stargazers_count: 50000, forks_count: 23000, html_url: "https://github.com/python/cpython" }
+    {
+        name: "linux", description: "Linux kernel", language: "C",
+        stargazers_count: 15000, forks_count: 2000, html_url: "https://github.com/torvalds/linux"
+    },
+    {
+        name: "cpython", description: "Python interpreter", language: "C",
+        stargazers_count: 50000, forks_count: 23000, html_url: "https://github.com/python/cpython"
+    }
 ]
 
 // ==================== 2. STATE ====================
@@ -26,13 +34,13 @@ const state = {
 
 // ==================== 3. ÉLÉMENTS DOM ====================
 
-const searchInput   = document.getElementById('search-input')
-const searchBtn     = document.getElementById('btn-search')
-const userProfile   = document.getElementById('profile-card')
-const reposList     = document.getElementById('reposList')
-const welcomeState  = document.getElementById('view-welcome')
-const loadingState  = document.getElementById('view-loading')
-const errorState    = document.getElementById('view-error')
+const searchInput = document.getElementById('search-input')
+const searchBtn = document.getElementById('btn-search')
+const userProfile = document.getElementById('profile-card')
+const reposList = document.getElementById('reposList')
+const welcomeState = document.getElementById('view-welcome')
+const loadingState = document.getElementById('view-loading')
+const errorState = document.getElementById('view-error')
 const bookmarksList = document.getElementById('bookmarks-list')
 const bookmarkCount = document.getElementById('bookmarks-count')
 
@@ -65,7 +73,7 @@ function showWelcome() {
     welcomeState.classList.add('active')
 }
 
-// ==================== 6. displayUserProfile() ====================
+// ==================== 6. displayUserProfile( ! ) ====================
 
 function displayUserProfile(user) {
     userProfile.innerHTML =
@@ -93,11 +101,11 @@ function displayUserProfile(user) {
     state.currentUser = user
 }
 
-// ==================== 7. displayRepositories() ====================
+// ==================== 7. displayRepositories( ! ) ====================
 
 function displayRepositories(repos) {
     reposList.innerHTML = ''
-    repos.forEach(function(repo) {
+    repos.forEach(function (repo) {
         const repoCard =
             '<div class="repo-card">' +
             '<div class="repo-name">' + repo.name + '</div>' +
@@ -111,6 +119,56 @@ function displayRepositories(repos) {
             '</div>'
         reposList.innerHTML += repoCard
     })
+}
+
+// ==================== BOOKMARK FUNCTIONS ====================
+ 
+function isBookmarked(login) {
+    // some() = retourne true si AU MOINS UN élément passe la condition
+    return state.bookmarks.some(function(b) {
+        return b.login === login
+    })
+}
+ 
+function toggleBookmark(user) {
+    if (isBookmarked(user.login)) {
+        // Déjà favori → SUPPRIMER avec filter()
+        state.bookmarks = state.bookmarks.filter(function(b) {
+            return b.login !== user.login
+        })
+    } else {
+        // Pas favori → AJOUTER avec push()
+        state.bookmarks.push({
+            id: user.id,
+            login: user.login,
+            name: user.name || user.login,
+            avatar_url: user.avatar_url
+        })
+    }
+    saveBookmarks()           // persister dans localStorage
+    updateBadge()             // mettre à jour le compteur
+    displayUserProfile(user)  // re-render pour mettre à jour bouton
+}
+ 
+function saveBookmarks() {
+    localStorage.setItem('githunt_bookmarks', JSON.stringify(state.bookmarks))
+}
+ 
+function updateBadge() {
+    const count = state.bookmarks.length
+    bookmarkCount.textContent = count
+}
+ 
+function initState() {
+    const saved = localStorage.getItem('githunt_bookmarks')
+    if (saved) {
+        try {
+            state.bookmarks = JSON.parse(saved)
+        } catch (e) {
+            state.bookmarks = []
+        }
+    }
+    updateBadge()
 }
 
 // ==================== 8. searchUserLocal() ====================
@@ -129,14 +187,14 @@ function searchUserLocal(username) {
     showLoading()
 
     // 3. D'abord chercher dans testUsers (données locales)
-    const localUser = testUsers.find(function(u) {
+    const localUser = testUsers.find(function (u) {
         return u.login === input
     })
 
     if (localUser) {
         // Trouvé en local — simuler délai et afficher
-        setTimeout(function() {
-            const repos = testRepos.filter(function(r) {
+        setTimeout(function () {
+            const repos = testRepos.filter(function (r) {
                 return r.html_url.includes(input)
             })
             displayUserProfile(localUser)
@@ -147,7 +205,7 @@ function searchUserLocal(username) {
 
     // 4. Pas trouvé en local → appeler l'API GitHub réelle
     fetch('https://api.github.com/users/' + input)
-        .then(function(response) {
+        .then(function (response) {
 
             // Vérifier si l'utilisateur existe (404 = non trouvé)
             if (response.status === 404) {
@@ -162,14 +220,14 @@ function searchUserLocal(username) {
             // Lire le JSON de la réponse
             return response.json()
         })
-        .then(function(user) {
+        .then(function (user) {
             if (!user) return  // erreur déjà gérée
 
             // Afficher le profil reçu de l'API
             displayUserProfile(user)
             displayRepositories([])  // pas de repos pour l'instant
         })
-        .catch(function() {
+        .catch(function () {
             // Erreur réseau (pas internet, etc.)
             showError('Erreur réseau — vérifiez votre connexion !')
         })
