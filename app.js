@@ -51,6 +51,7 @@ function hideAll() {
     loadingState.classList.remove('active')
     errorState.classList.remove('active')
     document.getElementById('view-results').classList.remove('active')
+    document.getElementById('view-bookmarks').classList.remove('active')
     loadingState.style.display = 'none'
 }
 
@@ -73,7 +74,7 @@ function showWelcome() {
     welcomeState.classList.add('active')
 }
 
-// ==================== 6. displayUserProfile( ! ) ====================
+// ==================== 6. displayUserProfile() ====================
 
 function displayUserProfile(user) {
     userProfile.innerHTML =
@@ -86,14 +87,25 @@ function displayUserProfile(user) {
         '<div class="profile-name">' + (user.name || user.login) + '</div>' +
         '<div class="profile-login">@' + user.login + '</div>' +
         (user.bio ? '<div class="profile-bio">' + user.bio + '</div>' : '') +
+
+        // ✅ FIX 1 : bouton ⭐ Bookmark + lien GitHub
         '<div class="profile-actions">' +
+        '<button class="btn btn-fav ' + (isBookmarked(user.login) ? 'is-fav' : '') + '" id="btn-fav">' +
+            (isBookmarked(user.login) ? '★ Favori' : '☆ Ajouter') +
+        '</button>' +
         '<a href="https://github.com/' + user.login + '" target="_blank" class="btn btn-ghost">↗ GitHub</a>' +
         '</div></div></div>' +
+
         '<div class="stats-grid">' +
         '<div class="stat-box"><div class="stat-value">' + user.public_repos + '</div><div class="stat-label">Repos</div></div>' +
         '<div class="stat-box"><div class="stat-value">' + user.followers + '</div><div class="stat-label">Followers</div></div>' +
         '<div class="stat-box"><div class="stat-value">' + user.following + '</div><div class="stat-label">Following</div></div>' +
         '</div>'
+
+    // ✅ FIX 2 : addEventListener btn-fav APRÈS innerHTML
+    document.getElementById('btn-fav').addEventListener('click', function() {
+        toggleBookmark(user)
+    })
 
     userProfile.style.display = 'block'
     hideAll()
@@ -101,7 +113,7 @@ function displayUserProfile(user) {
     state.currentUser = user
 }
 
-// ==================== 7. displayRepositories( ! ) ====================
+// ==================== 7. displayRepositories() ====================
 
 function displayRepositories(repos) {
     reposList.innerHTML = ''
@@ -122,22 +134,19 @@ function displayRepositories(repos) {
 }
 
 // ==================== BOOKMARK FUNCTIONS ====================
- 
+
 function isBookmarked(login) {
-    // some() = retourne true si AU MOINS UN élément passe la condition
     return state.bookmarks.some(function(b) {
         return b.login === login
     })
 }
- 
+
 function toggleBookmark(user) {
     if (isBookmarked(user.login)) {
-        // Déjà favori → SUPPRIMER avec filter()
         state.bookmarks = state.bookmarks.filter(function(b) {
             return b.login !== user.login
         })
     } else {
-        // Pas favori → AJOUTER avec push()
         state.bookmarks.push({
             id: user.id,
             login: user.login,
@@ -145,20 +154,20 @@ function toggleBookmark(user) {
             avatar_url: user.avatar_url
         })
     }
-    saveBookmarks()           // persister dans localStorage
-    updateBadge()             // mettre à jour le compteur
-    displayUserProfile(user)  // re-render pour mettre à jour bouton
+    saveBookmarks()
+    updateBadge()
+    displayUserProfile(user)
 }
- 
+
 function saveBookmarks() {
     localStorage.setItem('githunt_bookmarks', JSON.stringify(state.bookmarks))
 }
- 
+
 function updateBadge() {
     const count = state.bookmarks.length
     bookmarkCount.textContent = count
 }
- 
+
 function initState() {
     const saved = localStorage.getItem('githunt_bookmarks')
     if (saved) {
@@ -171,11 +180,61 @@ function initState() {
     updateBadge()
 }
 
+// ==================== renderBookmarks() ====================
+
+function renderBookmarks() {
+    const count = state.bookmarks.length
+    bookmarkCount.textContent = count
+
+    if (count === 0) {
+        bookmarksList.innerHTML =
+            '<div class="empty-state">' +
+            '<span class="empty-icon">☆</span>' +
+            'Aucun favori sauvegardé.' +
+            '</div>'
+        return
+    }
+
+    bookmarksList.innerHTML = ''
+    state.bookmarks.forEach(function(b) {
+        bookmarksList.innerHTML +=
+            '<div class="bookmark-item" data-login="' + b.login + '">' +
+            '<img class="bookmark-avatar" src="' + b.avatar_url + '" alt="' + b.login + '"/>' +
+            '<div class="bookmark-info">' +
+            '<div class="bookmark-name">' + b.name + '</div>' +
+            '<div class="bookmark-login">@' + b.login + '</div>' +
+            '</div>' +
+            '<button class="btn btn-danger remove-fav" data-login="' + b.login + '">✕</button>' +
+            '</div>'
+    })
+
+    // Clic sur carte → recharger profil
+    bookmarksList.querySelectorAll('.bookmark-item').forEach(function(item) {
+        item.addEventListener('click', function(e) {
+            if (e.target.classList.contains('remove-fav')) return
+            searchInput.value = item.dataset.login
+            searchUserLocal(item.dataset.login)
+        })
+    })
+
+    // Clic ✕ → supprimer favori
+    bookmarksList.querySelectorAll('.remove-fav').forEach(function(btn) {
+        btn.addEventListener('click', function(e) {
+            e.stopPropagation()
+            state.bookmarks = state.bookmarks.filter(function(b) {
+                return b.login !== btn.dataset.login
+            })
+            saveBookmarks()
+            updateBadge()
+            renderBookmarks()
+        })
+    })
+}
+
 // ==================== 8. searchUserLocal() ====================
 
 function searchUserLocal(username) {
 
-    // 1. Valider l'input
     const input = username.trim().toLowerCase()
 
     if (!input) {
@@ -183,16 +242,13 @@ function searchUserLocal(username) {
         return
     }
 
-    // 2. Afficher le loader
     showLoading()
 
-    // 3. D'abord chercher dans testUsers (données locales)
     const localUser = testUsers.find(function (u) {
         return u.login === input
     })
 
     if (localUser) {
-        // Trouvé en local — simuler délai et afficher
         setTimeout(function () {
             const repos = testRepos.filter(function (r) {
                 return r.html_url.includes(input)
@@ -203,11 +259,8 @@ function searchUserLocal(username) {
         return
     }
 
-    // 4. Pas trouvé en local → appeler l'API GitHub réelle
     fetch('https://api.github.com/users/' + input)
         .then(function (response) {
-
-            // Vérifier si l'utilisateur existe (404 = non trouvé)
             if (response.status === 404) {
                 showError('Utilisateur non trouvé !')
                 return
@@ -216,35 +269,65 @@ function searchUserLocal(username) {
                 showError('Erreur réseau : ' + response.status)
                 return
             }
-
-            // Lire le JSON de la réponse
             return response.json()
         })
         .then(function (user) {
-            if (!user) return  // erreur déjà gérée
-
-            // Afficher le profil reçu de l'API
+            if (!user) return
             displayUserProfile(user)
-            displayRepositories([])  // pas de repos pour l'instant
+            displayRepositories([])
         })
         .catch(function () {
-            // Erreur réseau (pas internet, etc.)
             showError('Erreur réseau — vérifiez votre connexion !')
         })
 }
 
 // ==================== 9. EVENT LISTENERS ====================
 
-searchBtn.addEventListener('click', () => {
+// Bouton CHERCHER
+searchBtn.addEventListener('click', function() {
     searchUserLocal(searchInput.value)
 })
 
-searchInput.addEventListener('keypress', (e) => {
+// Touche Entrée
+searchInput.addEventListener('keypress', function(e) {
     if (e.key === 'Enter') {
         searchUserLocal(searchInput.value)
     }
 })
 
+// ✅ FIX 3 : Bouton Favoris dans header
+document.getElementById('btn-show-bookmarks').addEventListener('click', function() {
+    state.isViewingBookmarks = !state.isViewingBookmarks
+    const btn = document.getElementById('btn-show-bookmarks')
+
+    if (state.isViewingBookmarks) {
+        renderBookmarks()
+        hideAll()
+        document.getElementById('view-bookmarks').classList.add('active')
+        btn.classList.add('active')
+    } else {
+        btn.classList.remove('active')
+        if (state.currentUser) {
+            displayUserProfile(state.currentUser)
+        } else {
+            showWelcome()
+        }
+    }
+})
+
+// Bouton ← Retour
+document.getElementById('btn-back').addEventListener('click', function() {
+    state.isViewingBookmarks = false
+    document.getElementById('btn-show-bookmarks').classList.remove('active')
+    if (state.currentUser) {
+        displayUserProfile(state.currentUser)
+    } else {
+        showWelcome()
+    }
+})
+
 // ==================== 10. INITIALIZE ====================
 
+// ✅ FIX 3 : initState() avant showWelcome()
+initState()
 showWelcome()
