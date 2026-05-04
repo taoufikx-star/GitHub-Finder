@@ -87,23 +87,20 @@ function displayUserProfile(user) {
         '<div class="profile-name">' + (user.name || user.login) + '</div>' +
         '<div class="profile-login">@' + user.login + '</div>' +
         (user.bio ? '<div class="profile-bio">' + user.bio + '</div>' : '') +
-
-        // ✅ FIX 1 : bouton ⭐ Bookmark + lien GitHub
         '<div class="profile-actions">' +
         '<button class="btn btn-fav ' + (isBookmarked(user.login) ? 'is-fav' : '') + '" id="btn-fav">' +
-            (isBookmarked(user.login) ? '★ Favori' : '☆ Ajouter') +
+        (isBookmarked(user.login) ? '★ Favori' : '☆ Ajouter') +
         '</button>' +
         '<a href="https://github.com/' + user.login + '" target="_blank" class="btn btn-ghost">↗ GitHub</a>' +
         '</div></div></div>' +
-
         '<div class="stats-grid">' +
         '<div class="stat-box"><div class="stat-value">' + user.public_repos + '</div><div class="stat-label">Repos</div></div>' +
         '<div class="stat-box"><div class="stat-value">' + user.followers + '</div><div class="stat-label">Followers</div></div>' +
         '<div class="stat-box"><div class="stat-value">' + user.following + '</div><div class="stat-label">Following</div></div>' +
         '</div>'
 
-    // ✅ FIX 2 : addEventListener btn-fav APRÈS innerHTML
-    document.getElementById('btn-fav').addEventListener('click', function() {
+    // ✅ FIX 1 — addEventListener btn-fav APRÈS innerHTML
+    document.getElementById('btn-fav').addEventListener('click', function () {
         toggleBookmark(user)
     })
 
@@ -136,14 +133,14 @@ function displayRepositories(repos) {
 // ==================== BOOKMARK FUNCTIONS ====================
 
 function isBookmarked(login) {
-    return state.bookmarks.some(function(b) {
+    return state.bookmarks.some(function (b) {
         return b.login === login
     })
 }
 
 function toggleBookmark(user) {
     if (isBookmarked(user.login)) {
-        state.bookmarks = state.bookmarks.filter(function(b) {
+        state.bookmarks = state.bookmarks.filter(function (b) {
             return b.login !== user.login
         })
     } else {
@@ -196,7 +193,7 @@ function renderBookmarks() {
     }
 
     bookmarksList.innerHTML = ''
-    state.bookmarks.forEach(function(b) {
+    state.bookmarks.forEach(function (b) {
         bookmarksList.innerHTML +=
             '<div class="bookmark-item" data-login="' + b.login + '">' +
             '<img class="bookmark-avatar" src="' + b.avatar_url + '" alt="' + b.login + '"/>' +
@@ -209,8 +206,8 @@ function renderBookmarks() {
     })
 
     // Clic sur carte → recharger profil
-    bookmarksList.querySelectorAll('.bookmark-item').forEach(function(item) {
-        item.addEventListener('click', function(e) {
+    bookmarksList.querySelectorAll('.bookmark-item').forEach(function (item) {
+        item.addEventListener('click', function (e) {
             if (e.target.classList.contains('remove-fav')) return
             searchInput.value = item.dataset.login
             searchUserLocal(item.dataset.login)
@@ -218,10 +215,10 @@ function renderBookmarks() {
     })
 
     // Clic ✕ → supprimer favori
-    bookmarksList.querySelectorAll('.remove-fav').forEach(function(btn) {
-        btn.addEventListener('click', function(e) {
+    bookmarksList.querySelectorAll('.remove-fav').forEach(function (btn) {
+        btn.addEventListener('click', function (e) {
             e.stopPropagation()
-            state.bookmarks = state.bookmarks.filter(function(b) {
+            state.bookmarks = state.bookmarks.filter(function (b) {
                 return b.login !== btn.dataset.login
             })
             saveBookmarks()
@@ -265,6 +262,11 @@ function searchUserLocal(username) {
                 showError('Utilisateur non trouvé !')
                 return
             }
+            // ✅ FIX 2 — gestion 403 rate limit
+            if (response.status === 403) {
+                showError('Limite API GitHub atteinte — réessayez dans 1 heure !')
+                return
+            }
             if (!response.ok) {
                 showError('Erreur réseau : ' + response.status)
                 return
@@ -283,20 +285,18 @@ function searchUserLocal(username) {
 
 // ==================== 9. EVENT LISTENERS ====================
 
-// Bouton CHERCHER
-searchBtn.addEventListener('click', function() {
+searchBtn.addEventListener('click', function () {
     searchUserLocal(searchInput.value)
 })
 
-// Touche Entrée
-searchInput.addEventListener('keypress', function(e) {
+searchInput.addEventListener('keypress', function (e) {
     if (e.key === 'Enter') {
         searchUserLocal(searchInput.value)
     }
 })
 
-// ✅ FIX 3 : Bouton Favoris dans header
-document.getElementById('btn-show-bookmarks').addEventListener('click', function() {
+// Bouton Favoris dans header
+document.getElementById('btn-show-bookmarks').addEventListener('click', function () {
     state.isViewingBookmarks = !state.isViewingBookmarks
     const btn = document.getElementById('btn-show-bookmarks')
 
@@ -316,7 +316,7 @@ document.getElementById('btn-show-bookmarks').addEventListener('click', function
 })
 
 // Bouton ← Retour
-document.getElementById('btn-back').addEventListener('click', function() {
+document.getElementById('btn-back').addEventListener('click', function () {
     state.isViewingBookmarks = false
     document.getElementById('btn-show-bookmarks').classList.remove('active')
     if (state.currentUser) {
@@ -328,6 +328,6 @@ document.getElementById('btn-back').addEventListener('click', function() {
 
 // ==================== 10. INITIALIZE ====================
 
-// ✅ FIX 3 : initState() avant showWelcome()
+// ✅ FIX 3 — initState() avant showWelcome()
 initState()
 showWelcome()
