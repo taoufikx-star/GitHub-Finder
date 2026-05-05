@@ -228,6 +228,7 @@ function renderBookmarks() {
     })
 }
 
+
 // ==================== 8. searchUserLocal() ====================
 
 function searchUserLocal(username) {
