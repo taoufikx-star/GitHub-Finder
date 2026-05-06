@@ -23,9 +23,7 @@ const testRepos = [
         stargazers_count: 50000, forks_count: 23000, html_url: "https://github.com/python/cpython"
     }
 ]
-
 // ==================== 2. STATE ====================
-
 const state = {
     currentUser: null,
     bookmarks: [],
