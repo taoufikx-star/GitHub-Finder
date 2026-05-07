@@ -1,77 +1,162 @@
-Hunt<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GitHunt — Recherche de Profils GitHub</title>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css" />
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Chercheur de profils utilisateurs sur GitHub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-  <!-- ── Header ── -->
-  <header>
-    <div class="logo">⌬ Git<span>Hunt</span></div>
-    <div class="header-actions">
-      <button class="btn btn-ghost" id="btn-show-bookmarks">
-        ★ Favoris <span id="header-badge" class="badge" style="display:none">0</span>
+<!-- ─── SIDEBAR ─── -->
+<aside id="sidebar">
+  <div class="sidebar-header">
+    <div class="logo">
+      <span class="logo-icon">⬡</span>
+      GitHub <span>Profils</span>
+    </div>
+    <div class="logo-sub">GitHub User Search</div>
+  </div>
+
+  <div class="search-box">
+    <label class="search-label" for="search-input">// Rechercher un profil</label>
+    <div class="input-wrap">
+      <input id="search-input" type="text" placeholder="ex: torvalds" autocomplete="off" spellcheck="false" />
+      <button id="search-btn" title="Rechercher">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+        </svg>
       </button>
     </div>
-  </header>
+  </div>
 
-  <!-- ── Main ── -->
-  <main>
+  <div class="sidebar-nav">
+    <button class="nav-tab active" data-tab="search">
+      🔍 Recherche
+    </button>
+    <button class="nav-tab" data-tab="bookmarks">
+      ★ Favoris
+    </button>
+  </div>
 
-    <!-- Barre de recherche -->
-    <div class="search-bar">
-      <div class="search-input-wrap">
-        <span class="search-icon">@</span>
-        <input type="text" id="search-input" placeholder="Entrez un pseudo GitHub..." autocomplete="off" />
-      </div>
-      <button class="btn btn-primary" id="btn-search">CHERCHER</button>
+  <div id="bookmarks-panel">
+    <div class="bm-count">
+      Favoris sauvegardés <span class="bm-badge" id="bm-count">0</span>
     </div>
+    <div id="bm-list"></div>
+  </div>
+</aside>
 
-    <!-- Vue : Accueil -->
+<!-- ─── MAIN ─── -->
+<main id="main">
+  <div id="top-bar">
+    <span class="top-tag">API GitHub</span>
+    <span class="dot"></span>
+    <span class="top-tag">Public</span>
+  </div>
+
+  <div id="content">
+
+    <!-- Welcome -->
     <div id="view-welcome" class="view active">
-      <span class="welcome-icon">⌬</span>
-      <h1>Trouvez les meilleurs<br /><span class="hl">développeurs GitHub</span></h1>
-      <p>Recherchez un profil, explorez ses stats et sauvegardez vos candidats favoris.</p>
+      <div class="welcome-glyph">⬡</div>
+      <h1 class="welcome-title">Chercheur de profils<br/>utilisateurs sur GitHub</h1>
+      <p class="welcome-sub">Explorez les profils GitHub, analysez les statistiques et sauvegardez vos favoris en quelques clics.</p>
+      <div class="feature-grid">
+        <div class="feature-pill">
+          <span class="feature-pill-icon">🔍</span>
+          Recherche instantanée
+        </div>
+        <div class="feature-pill">
+          <span class="feature-pill-icon">📊</span>
+          Stats détaillées
+        </div>
+        <div class="feature-pill">
+          <span class="feature-pill-icon">★</span>
+          Favoris persistants
+        </div>
+      </div>
     </div>
 
-    <!-- Vue : Chargement -->
+    <!-- Loading -->
     <div id="view-loading" class="view">
-      <div class="loader"></div>
-      <span class="loader-text">RECHERCHE EN COURS...</span>
+      <div class="loader-ring"></div>
+      <p class="loader-text">Récupération du profil GitHub…</p>
     </div>
 
-    <!-- Vue : Erreur -->
+    <!-- Error -->
     <div id="view-error" class="view">
-      <div class="error-box">
-        <span class="error-icon">✕</span>
-        <span class="error-msg" id="error-message">Utilisateur non trouvé.</span>
+      <div class="error-card">
+        <div class="error-icon">⚠️</div>
+        <div>
+          <div class="error-title" id="error-title">Utilisateur non trouvé</div>
+          <div class="error-msg" id="error-msg">Vérifiez le nom d'utilisateur et réessayez.</div>
+        </div>
       </div>
     </div>
 
-    <!-- Vue : Résultats profil -->
+    <!-- Results -->
     <div id="view-results" class="view">
-      <div class="profile-card" id="profile-card"></div>
-       <div id="reposList"></div>
-    </div>
+      <div class="profile-hero">
+        <div class="profile-banner"></div>
+        <div class="profile-body">
+          <div class="profile-avatar-wrap">
+            <img id="r-avatar" class="profile-avatar" src="" alt="avatar" />
+          </div>
+          <div class="profile-top-row">
+            <div>
+              <div class="profile-name" id="r-name">—</div>
+              <div class="profile-login" id="r-login">—</div>
+            </div>
+            <div class="action-row" style="margin-top:0">
+              <a id="r-github-link" href="#" target="_blank" class="btn btn-outline">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+                </svg>
+                GitHub
+              </a>
+              <button id="r-bookmark-btn" class="btn btn-primary">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/>
+                </svg>
+                Favori
+              </button>
+            </div>
+          </div>
 
-    <!-- Vue : Favoris -->
-    <div id="view-bookmarks" class="view">
-      <div class="section-header">
-        <span class="section-title">
-          ★ Favoris
-          <span class="badge" id="bookmarks-count">0</span>
-        </span>
-        <button class="btn btn-ghost" id="btn-back">← Retour</button>
+          <p class="profile-bio" id="r-bio">—</p>
+          <div class="profile-meta" id="r-meta"></div>
+
+          <div class="section-title">statistiques</div>
+          <div class="stats-row">
+            <div class="stat-box">
+              <span class="stat-value" id="r-repos">0</span>
+              <span class="stat-label">Repos publics</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-value" id="r-followers">0</span>
+              <span class="stat-label">Followers</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-value" id="r-following">0</span>
+              <span class="stat-label">Following</span>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="bookmarks-list" id="bookmarks-list"></div>
     </div>
 
-  </main>
+  </div>
+</main>
 
-  <script src="app.js"></script>
+<!-- Toast -->
+<div id="toast">
+  <span class="toast-icon" id="toast-icon">✅</span>
+  <span id="toast-msg">Action effectuée</span>
+</div>
+
+<script src="app.js"></script>
 </body>
 </html>
