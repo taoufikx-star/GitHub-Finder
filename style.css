@@ -4,11 +4,11 @@
   --surface:   #111318;
   --surface2:  #1a1d24;
   --border:    #252830;
-  --accent:    #01ff3c;
+  --accent:    #ff0000;
   --accent2:   #7c3aed;
-  --text:      #e8eaf0;
-  --text-muted:#6b7280;
-  --danger:    #09ff16;
+  --text:      #ffffff;
+  --text-muted:#ffffff;
+  --danger:    #ff0909;
   --success:   #ff8000;
   --radius:    12px;
   --mono:      'Space Mono', monospace;
@@ -112,11 +112,11 @@ header {
   padding: 0.45rem 0.9rem;
 }
 .btn-fav.is-fav {
-  color: #f59e0b;
+  color: #ff0000;
   border-color: rgba(245,158,11,0.4);
-  background: rgba(245,158,11,0.07);
+  background: rgba(244, 243, 241, 0.07);
 }
-.btn-fav:hover { border-color: #f59e0b; color: #f59e0b; }
+.btn-fav:hover { border-color: #fa0000; color: #f59e0b; }
 
 /* ─── Main Layout — FIXED ─── */
 main {
